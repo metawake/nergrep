@@ -5,7 +5,7 @@ from typing import List, Optional, Set
 from .types import EntityRecord
 
 # Load the English language model
-nlp = spacy.load("en_core_web_lg")
+nlp = spacy.load("en_core_web_sm")
 
 def extract_entities(
     text: str,

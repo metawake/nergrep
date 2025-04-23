@@ -33,14 +33,14 @@ def format_entity(entity: EntityRecord, format_type: str = "text") -> str:
     else:  # text format
         return f"{entity.text} ({entity.label}) in: {entity.sentence}"
 
-@app.command(name="extract")
-def extract_entities_cmd(
+@app.command()
+def main(
     input_file: str = typer.Argument(..., help="Input text file to process"),
-    types: Optional[List[str]] = typer.Option(
+    types: Optional[str] = typer.Option(
         None,
         "--types",
         "-t",
-        help="Entity types to include (e.g., PERSON, ORG, GPE)"
+        help="Entity types to include, comma-separated (e.g., PERSON,ORG,GPE)"
     ),
     fuzzy: Optional[str] = typer.Option(
         None,
@@ -126,12 +126,13 @@ def extract_entities_cmd(
         whitelist = set(whitelist_path.read_text().splitlines())
     
     # Extract entities
-    entities = extract_entities(text, types=types)
+    entity_types = set(types.split(",")) if types else None
+    entities = extract_entities(text, types=entity_types)
     
     # Apply filters
     if any([blacklist, whitelist, fuzzy, regex, partial_word, min_length, max_length]):
         filter_config = FilterConfig(
-            entity_types=set(types) if types else None,
+            entity_types=entity_types,
             blacklist=blacklist,
             whitelist=whitelist,
             fuzzy_match=fuzzy,
