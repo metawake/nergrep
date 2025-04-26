@@ -15,10 +15,10 @@ setup(
     ),
     long_description=long_description,
     long_description_content_type="text/markdown",
-    author="Alex Alexapolsky",  # TODO: Update with your name
-    author_email="metawake@gmail.com",  # TODO: Update with your email
+    author="Alex Alexapolsky", 
+    author_email="metawake@gmail.com",  
     url=(
-        "https://github.com/metawake/nergrep"  # TODO: Update with your repository URL
+        "https://github.com/metawake/nergrep" 
     ),
     packages=find_packages(),
     install_requires=[
