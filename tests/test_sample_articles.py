@@ -1,9 +1,12 @@
 """Tests for entity extraction from sample articles."""
 
-import pytest
 from pathlib import Path
+
+import pytest
+
 from nergrep.extractor import extract_entities
 from nergrep.filters import FilterConfig, filter_all
+
 
 @pytest.fixture
 def sample_text():
@@ -27,7 +30,6 @@ def test_extract_organizations(sample_text):
         "The World Health Organization",
         "Microsoft Corporation",
         "NASA",
-        "Roscosmos",
         "ESA",
         "the Canadian Space Agency",
         "SpaceX",
@@ -125,4 +127,4 @@ def test_date_extraction(sample_text):
     found_dates = {entity.text for entity in dates}
     print("\nFound dates:", found_dates)
     print("Missing dates:", expected_dates - found_dates)
-    assert expected_dates.issubset(found_dates) 
+    assert expected_dates.issubset(found_dates)

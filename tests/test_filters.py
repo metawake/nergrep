@@ -1,18 +1,20 @@
 """Tests for the entity filters."""
 
 import pytest
+
 from nergrep.filters import (
     FilterConfig,
-    filter_by_type,
+    filter_all,
     filter_by_blacklist,
-    filter_by_whitelist,
     filter_by_fuzzy_match,
-    filter_by_regex,
-    filter_by_partial_word,
     filter_by_length,
-    filter_all
+    filter_by_partial_word,
+    filter_by_regex,
+    filter_by_type,
+    filter_by_whitelist,
 )
 from nergrep.types import EntityRecord
+
 
 @pytest.fixture
 def sample_entities():
@@ -106,12 +108,12 @@ def test_filter_by_regex(sample_entities):
     # Test basic regex matching
     filtered = filter_by_regex(sample_entities, r"^[A-Z]")
     assert len(filtered) == 7  # All entities start with capital letter
-    
+
     # Test case-insensitive matching
     filtered = filter_by_regex(sample_entities, r"apple")
     assert len(filtered) == 1
     assert filtered[0].text == "Apple Inc."
-    
+
     # Test invalid regex
     filtered = filter_by_regex(sample_entities, r"[")
     assert len(filtered) == 7  # Should return all entities for invalid regex
@@ -121,7 +123,7 @@ def test_filter_by_partial_word(sample_entities):
     filtered = filter_by_partial_word(sample_entities, "soft")
     assert len(filtered) == 1
     assert filtered[0].text == "Microsoft"
-    
+
     # Test case-insensitive matching
     filtered = filter_by_partial_word(sample_entities, "APPLE")
     assert len(filtered) == 1
@@ -132,13 +134,13 @@ def test_filter_by_length(sample_entities):
     filtered = filter_by_length(sample_entities, min_length=6)
     assert len(filtered) == 7  # All entities are at least 6 characters long
     assert all(len(entity.text) >= 6 for entity in filtered)
-    
+
     # Test maximum length
     filtered = filter_by_length(sample_entities, max_length=6)
     assert len(filtered) == 2  # Only "Google" and "London" are 6 characters or less
     assert all(len(entity.text) <= 6 for entity in filtered)
     assert {entity.text for entity in filtered} == {"Google", "London"}
-    
+
     # Test both min and max length
     filtered = filter_by_length(sample_entities, min_length=6, max_length=8)
     assert len(filtered) == 4  # "New York", "Google", "Jane Doe", "London" are between 6 and 8 characters
@@ -166,4 +168,4 @@ def test_filter_all_with_blacklist_and_whitelist(sample_entities):
     )
     filtered = filter_all(sample_entities, config)
     assert len(filtered) == 1
-    assert filtered[0].text == "Apple Inc." 
+    assert filtered[0].text == "Apple Inc."

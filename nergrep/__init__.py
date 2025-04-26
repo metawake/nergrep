@@ -2,4 +2,4 @@
 
 __version__ = "0.1.0"
 
-"""NER extraction and filtering package.""" 
+"""NER extraction and filtering package."""

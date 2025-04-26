@@ -1,9 +1,11 @@
 """Command-line interface for nergrep."""
 
-import typer
-from pathlib import Path
-from typing import List, Optional
 import json
+from pathlib import Path
+from typing import Optional
+
+import typer
+
 from .extractor import extract_entities
 from .filters import FilterConfig, filter_all
 from .types import EntityRecord
@@ -12,11 +14,11 @@ app = typer.Typer()
 
 def format_entity(entity: EntityRecord, format_type: str = "text") -> str:
     """Format an entity record for output.
-    
+
     Args:
         entity: The entity record to format
         format_type: Output format type ("text", "json", or "csv")
-        
+
     Returns:
         Formatted string representation of the entity
     """
@@ -29,13 +31,16 @@ def format_entity(entity: EntityRecord, format_type: str = "text") -> str:
             "end": entity.end
         })
     elif format_type == "csv":
-        return f'"{entity.text}","{entity.label}","{entity.sentence}",{entity.start},{entity.end}'
+        return (
+            f'"{entity.text}","{entity.label}","{entity.sentence}",'
+            f"{entity.start},{entity.end}"
+        )
     else:  # text format
         return f"{entity.text} ({entity.label}) in: {entity.sentence}"
 
 @app.command()
 def main(
-    input_file: str = typer.Argument(..., help="Input text file to process"),
+    input_text: str = typer.Argument(..., help="Input text or file path to process"),
     types: Optional[str] = typer.Option(
         None,
         "--types",
@@ -106,29 +111,32 @@ def main(
     )
 ):
     """Extract named entities from text with optional filtering."""
-    
-    # Convert paths to Path objects
-    input_path = Path(input_file)
-    blacklist_path = Path(blacklist_file) if blacklist_file else None
-    whitelist_path = Path(whitelist_file) if whitelist_file else None
-    
-    # Read input text
-    text = input_path.read_text()
-    
+
+    # Handle input text or file
+    input_path = Path(input_text)
+    if input_path.exists():
+        text = input_path.read_text()
+    else:
+        text = input_text
+
     # Read blacklist if provided
     blacklist = None
-    if blacklist_path:
-        blacklist = set(blacklist_path.read_text().splitlines())
-    
+    if blacklist_file:
+        blacklist_path = Path(blacklist_file)
+        if blacklist_path.exists():
+            blacklist = set(blacklist_path.read_text().splitlines())
+
     # Read whitelist if provided
     whitelist = None
-    if whitelist_path:
-        whitelist = set(whitelist_path.read_text().splitlines())
-    
+    if whitelist_file:
+        whitelist_path = Path(whitelist_file)
+        if whitelist_path.exists():
+            whitelist = set(whitelist_path.read_text().splitlines())
+
     # Extract entities
     entity_types = set(types.split(",")) if types else None
     entities = extract_entities(text, types=entity_types)
-    
+
     # Apply filters
     if any([blacklist, whitelist, fuzzy, regex, partial_word, min_length, max_length]):
         filter_config = FilterConfig(
@@ -143,7 +151,7 @@ def main(
             max_length=max_length
         )
         entities = filter_all(entities, filter_config)
-    
+
     # Sort entities if requested
     if sort_by:
         if sort_by == "text":
@@ -161,8 +169,13 @@ def main(
                 key = (entity.text, entity.label)
                 entity_counts[key] = entity_counts.get(key, 0) + 1
             # Sort by frequency (descending) and then by text
-            entities.sort(key=lambda x: (-entity_counts[(x.text, x.label)], x.text.lower()))
-    
+            entities.sort(
+                key=lambda x: (
+                    -entity_counts[(x.text, x.label)],
+                    x.text.lower()
+                )
+            )
+
     # Output results
     if output_format == "json":
         print(json.dumps([{
@@ -189,4 +202,4 @@ def main(
                 print(f"{entity.text} ({entity.label})")
 
 if __name__ == "__main__":
-    app() 
+    app()
