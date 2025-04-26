@@ -1,6 +1,10 @@
 # Nergrep
 
-A flexible Python package for extracting and filtering named entities from text using spaCy.
++ As an AI/NLP/ML platform engineer, I often need to prototype and iterate on text analytics pipelines. Entity extraction is a frequent, foundational step—whether I'm building quick R&D experiments or shaping components for production. I wanted a tool that was both fast and flexible: something I could use from the command line for ad-hoc analysis, or drop into Python code and larger frameworks like Langchain for more complex workflows.
++ 
++ That's why I built `nergrep`: a Python package and CLI for extracting and filtering named entities using spaCy, with powerful filtering and seamless integration into modern LLM pipelines.
++ 
++ While I'm still exploring whether `nergrep` will become a production staple or remain a rapid prototyping tool, it's already proven invaluable for shaping and testing new NLP pipelines in R&D.
 
 ## Features
 
