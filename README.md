@@ -27,7 +27,7 @@
 ## Installation
 
 ```bash
-pip install git+https://github.com/yourusername/nergrep.git
+pip install git+https://github.com/metawake/nergrep.git
 ```
 
 2. Download the spaCy model:
