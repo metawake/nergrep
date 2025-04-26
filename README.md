@@ -24,6 +24,31 @@
 - Sorting options
 - Case-insensitive matching
 
+# Quick Demo
+
+```bash
+nergrep "Apollo 11 was the spaceflight that first landed humans on the Moon. Commander Neil Armstrong and lunar module pilot Buzz Aldrin formed the American crew. They landed the Apollo Lunar Module Eagle on July 20, 1969, at 20:17 UTC. They collected 47.5 pounds of lunar material to bring back to Earth. The mission was launched by a Saturn V rocket from Kennedy Space Center in Florida, and fulfilled a national goal set by President John F. Kennedy in 1961. NASA was responsible for the mission."
+```
+
+# Example output: YAML output from nergrep entity extraction
+```
+- text: "Apollo"
+  label: "ORG"
+  sentence: "Apollo 11 was the spaceflight that first landed humans on the Moon."
+- text: "Neil Armstrong"
+  label: "PERSON"
+  sentence: "Commander Neil Armstrong and lunar module pilot Buzz Aldrin formed the American crew."
+- text: "July 20, 1969"
+  label: "DATE"
+  sentence: "They landed the Apollo Lunar Module Eagle on July 20, 1969, at 20:17 UTC."
+- text: "Earth"
+  label: "LOC"
+  sentence: "They collected 47.5 pounds of lunar material to bring back to Earth."
+- text: "NASA"
+  label: "ORG"
+  sentence: "The mission was launched by a Saturn V rocket from Kennedy Space Center in Florida, and fulfilled a national goal set by President John F. Kennedy in 1961."
+```
+
 ## Installation
 
 ```bash
